@@ -24,7 +24,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: .lake
-          key: build-${{ runner.os }}-${{ hashFiles('lakefile.toml', 'lake-manifest.json', 'lean-toolchain') }}
+          key: build-${{ hashFiles('lakefile.toml', 'lake-manifest.json', 'lean-toolchain') }}
 
       - name: get mathlib cache
         if: steps.restore-build-cache.outputs.cache-hit != 'true'
@@ -38,13 +38,6 @@ jobs:
           lake build
           result_run1=$?
           echo "Complete at $(date +'%T'); return value $result_run1"
-
-      # TODO only save cache on main branch, not for PRs
-      - name: save build cache
-        uses: actions/cache/save@v4
-        with:
-          path: .lake
-          key: ${{ steps.restore-build-cache.outputs.cache-primary-key }}
 
       - name: check that Compfiles.lean is up to date
         id: check-Compfiles-lean
